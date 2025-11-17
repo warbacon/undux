@@ -19,25 +19,11 @@
       in
       {
         packages = {
-          undug = pkgs.buildGoModule {
-            pname = "undug";
-            version = "0.1.0";
-            src = ./.;
-
-            vendorHash = null;
-
-            meta = with pkgs.lib; {
-              description = "Undug - Unduck but faster";
-              homepage = "https://github.com/warbacon/undug";
-              license = licenses.mit;
-            };
-          };
-
+          undug = pkgs.callPackage ./nix/package.nix { };
           default = self.packages.${system}.undug;
         };
-
+        nixosModules.default = import ./nix/module.nix self;
         devShells.default = import ./shell.nix { inherit pkgs; };
-
         apps.default = {
           type = "app";
           program = "${self.packages.${system}.undux}/bin/undug";
